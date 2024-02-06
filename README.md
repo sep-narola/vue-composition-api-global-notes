@@ -1,10 +1,10 @@
 # vue-composition-api-global-notes
 
-Global Notes App
+## Global Notes App
 
-It is basically a presentable notes app demonstrating implementation of Vue 3 concepts.
+### It is basically a presentable notes app demonstrating implementation of Vue 3 concepts.
 
-### Implementations :
+## Implementations :
 
 - Vue 3
 - vue-router@4
