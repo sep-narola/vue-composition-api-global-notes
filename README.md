@@ -1,6 +1,13 @@
 # vue-composition-api-global-notes
 
-This template should help get you started developing with Vue 3 in Vite.
+Global Notes App
+
+It is basically a presentable notes app demonstrating implementation of Vue 3 concepts.
+
+### Implementations :
+
+- Vue 3
+- vue-router@4
 
 ## Recommended IDE Setup
 
