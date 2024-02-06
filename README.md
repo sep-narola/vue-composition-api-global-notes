@@ -8,6 +8,7 @@
 
 - Vue 3
 - vue-router@4
+- Bulma CSS - https://bulma.io/
 
 ## Recommended IDE Setup
 
