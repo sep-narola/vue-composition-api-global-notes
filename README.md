@@ -6,9 +6,11 @@
 
 ## Implementations :
 
-- Vue 3
-- vue-router@4
+- Vue 3 - https://vuejs.org/
+- vue-router@4 - https://router.vuejs.org/
 - Bulma CSS - https://bulma.io/
+- Pinia - https://pinia.vuejs.org/
+- vueuse - https://vueuse.org/
 
 ## Recommended IDE Setup
 

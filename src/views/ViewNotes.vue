@@ -1,36 +1,22 @@
 <template>
   <div class="notes">
-    <div class="card has-background-success-dark p-4 mb-5">
-      <div class="field">
-        <div class="control">
-          <textarea
-            class="textarea"
-            v-model="newNote"
-            placeholder="Add a new note"
-            ref="newNoteRef"
-          />
-        </div>
-      </div>
+    <AddEditNote
+      v-model="newNote"
+      ref="addEditNoteRef"
+      placeholder="Add a new note"
+    >
+      <template #buttons>
+        <button
+          class="button is-link has-background-success"
+          @click="addNote"
+          :disabled="!newNote || !newNote?.trim()"
+        >
+          Add New Note
+        </button>
+      </template>
+    </AddEditNote>
 
-      <div class="field is-grouped is-grouped-right">
-        <div class="control">
-          <button
-            class="button is-link has-background-success"
-            @click="addNote"
-            :disabled="!newNote || !newNote?.trim()"
-          >
-            Add New Note
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <Note
-      v-for="note in notes"
-      :key="note.id"
-      :note="note"
-      @deleteClicked="deleteNote"
-    />
+    <Note v-for="note in storeNotes.notes" :key="note.id" :note="note" />
   </div>
 </template>
 
@@ -41,46 +27,30 @@
 
 import { ref } from "vue";
 import Note from "@/components/Notes/Note.vue";
+import AddEditNote from "@/components/Notes/AddEditNote.vue";
+import { useStoreNotes } from "@/stores/storeNotes";
+import { useWatchCharacters } from "@/use/useWatchCharacters";
+
+/*
+  store
+*/
+const storeNotes = useStoreNotes();
 
 /*
   notes
 */
 
 const newNote = ref("");
-const newNoteRef = ref(null);
+const addEditNoteRef = ref(null);
 
-const notes = ref([
-  {
-    id: "id1",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate accusantium fugiat esse officiis optio consectetur velit aperiam, illo deserunt ipsa quaerat vel ratione consequuntur atque rem, sequi expedita dignissimos tempore.",
-  },
-  {
-    id: "id2",
-    content: "This is a shorter note! Woo!",
-  },
-]);
-
-/*
-  add note
-*/
 const addNote = () => {
-  let currentDate = new Date().getTime(),
-    id = currentDate.toString();
-  let note = {
-    id, // similar to id: id,
-    content: newNote.value,
-  };
-  notes.value.unshift(note);
+  storeNotes.addNote(newNote.value);
   newNote.value = "";
-  newNoteRef.value.focus();
+  addEditNoteRef.value.focusTextarea();
 };
 
 /*
-  delete note
+  watch characters
 */
-
-const deleteNote = (idToDelete) => {
-  notes.value = notes.value.filter((note) => note.id != idToDelete);
-};
+useWatchCharacters(newNote);
 </script>
