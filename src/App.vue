@@ -9,9 +9,22 @@
 /*
   imports
 */
-import NavBar from "@/components/Layout/NavBar.vue";
-</script>
 
-<style>
-/* @import "bulma/css/bulma.min.css"; */
-</style>
+import { onMounted } from "vue";
+import NavBar from "@/components/Layout/NavBar.vue";
+import { useStoreNotes } from "./stores/storeNotes";
+
+/*
+  store
+*/
+
+const storeNotes = useStoreNotes();
+
+/*
+  mounted
+*/
+
+onMounted(() => {
+  storeNotes.getNotes();
+});
+</script>
