@@ -75,6 +75,6 @@ const modals = reactive({
 */
 const formattedDate = computed(() => {
   let date = new Date(parseInt(props.note.date));
-  return useDateFormat(date, "DD-MM-YYYY @ HH:mm A").value;
+  return useDateFormat(date, "DD-MM-YYYY @ hh:mm A").value;
 });
 </script>
