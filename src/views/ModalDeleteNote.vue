@@ -24,7 +24,7 @@
   imports
 */
 
-import { defineEmits, defineProps, onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { useStoreNotes } from "@/stores/storeNotes";
 
