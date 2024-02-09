@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "@/js/firebase";
+import { useStoreNotes } from "@/stores/storeNotes";
 
 export const useStoreAuth = defineStore("storeAuth", {
   state: () => {
@@ -19,6 +20,9 @@ export const useStoreAuth = defineStore("storeAuth", {
     // This hook will be fired everytime the user logs on or logs out
     init() {
       this.authLoaded = false;
+
+      const storeNotes = useStoreNotes();
+
       onAuthStateChanged(auth, (user) => {
         if (user) {
           // User is signed in, see docs for a list of available properties
@@ -27,11 +31,13 @@ export const useStoreAuth = defineStore("storeAuth", {
           this.user.email = user.email;
           this.authLoaded = true;
           this.router.push("/");
+          storeNotes.init();
         } else {
           // User is signed out
           this.user = {};
           this.authLoaded = true;
           this.router.replace("/auth");
+          storeNotes.clearNotes();
         }
       });
     },
@@ -46,7 +52,6 @@ export const useStoreAuth = defineStore("storeAuth", {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log("register > user =>", user);
           this.authLoaded = true;
         })
         .catch((error) => {
@@ -63,7 +68,6 @@ export const useStoreAuth = defineStore("storeAuth", {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log("login > user =>", user);
           this.authLoaded = true;
         })
         .catch((error) => {

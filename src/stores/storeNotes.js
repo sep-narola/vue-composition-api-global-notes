@@ -10,10 +10,12 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { db } from "@/js/firebase";
+import { useStoreAuth } from "@/stores/storeAuth";
 
-const notesCollectionRef = collection(db, "notes");
+let notesCollectionRef;
+let notesCollectionQuery;
 
-const notesCollectionQuery = query(notesCollectionRef, orderBy("date", "desc"));
+let getNotesSnapshot = null;
 
 export const useStoreNotes = defineStore("storeNotes", {
   /* 
@@ -31,21 +33,40 @@ export const useStoreNotes = defineStore("storeNotes", {
     note: actions are Methods, functions
   */
   actions: {
+    // initialize database refs
+    init() {
+      const storeAuth = useStoreAuth();
+
+      notesCollectionRef = collection(db, "users", storeAuth.user.id, "notes");
+      notesCollectionQuery = query(notesCollectionRef, orderBy("date", "desc"));
+      this.getNotes();
+    },
+
     getNotes() {
       this.notesLoaded = false;
-      onSnapshot(notesCollectionQuery, (querySnapshot) => {
-        let notes = [];
-        querySnapshot.forEach((doc) => {
-          let note = {
-            id: doc.id,
-            content: doc.data().content,
-            date: doc.data().date,
-          };
-          notes.push(note);
-        });
-        this.notes = notes;
-        this.notesLoaded = true;
-      });
+
+      if (getNotesSnapshot) getNotesSnapshot(); // unsubscribe from the active listener
+
+      getNotesSnapshot = onSnapshot(
+        notesCollectionQuery,
+        (querySnapshot) => {
+          let notes = [];
+          querySnapshot.forEach((doc) => {
+            let note = {
+              id: doc.id,
+              content: doc.data().content,
+              date: doc.data().date,
+            };
+            notes.push(note);
+          });
+          this.notes = notes;
+          this.notesLoaded = true;
+        },
+        (error) => {
+          this.notesLoaded = true;
+          console.log("notes error", error.message);
+        }
+      );
     },
 
     async addNote(newNoteContent) {
@@ -66,6 +87,11 @@ export const useStoreNotes = defineStore("storeNotes", {
       await updateDoc(doc(notesCollectionRef, id), {
         content,
       });
+    },
+
+    clearNotes() {
+      this.notes = [];
+      if (getNotesSnapshot) getNotesSnapshot();
     },
   },
 
