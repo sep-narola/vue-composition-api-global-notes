@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/js/firebase";
 import { useStoreNotes } from "@/stores/storeNotes";
+import { toastr } from "@/use/useToastr";
 
 export const useStoreAuth = defineStore("storeAuth", {
   state: () => {
@@ -52,12 +53,18 @@ export const useStoreAuth = defineStore("storeAuth", {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          toastr("User registered successfully!", { type: "success" });
           this.authLoaded = true;
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log("register error =>", errorMessage);
+          toastr(
+            errorMessage
+              ? `${errorCode} - ${errorMessage}`
+              : "Something went wrong while registering user!",
+            { type: "error" }
+          );
           this.authLoaded = true;
         });
     },
@@ -73,7 +80,12 @@ export const useStoreAuth = defineStore("storeAuth", {
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log("login error =>", errorMessage);
+          toastr(
+            errorMessage
+              ? `${errorCode} - ${errorMessage}`
+              : "Something went wrong, please try again later!",
+            { type: "error" }
+          );
           this.authLoaded = true;
         });
     },
@@ -87,7 +99,14 @@ export const useStoreAuth = defineStore("storeAuth", {
         })
         .catch((error) => {
           // An error happened.
-          console.log("logout error =>", error);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toastr(
+            errorMessage
+              ? `${errorCode} - ${errorMessage}`
+              : "Something went wrong while logging out the user!",
+            { type: "error" }
+          );
           this.authLoaded = true;
         });
     },

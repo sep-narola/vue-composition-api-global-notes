@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import { db } from "@/js/firebase";
 import { useStoreAuth } from "@/stores/storeAuth";
+import { toastr } from "@/use/useToastr";
+import { toast } from "vue3-toastify";
 
 let notesCollectionRef;
 let notesCollectionQuery;
@@ -64,7 +66,14 @@ export const useStoreNotes = defineStore("storeNotes", {
         },
         (error) => {
           this.notesLoaded = true;
-          console.log("notes error", error.message);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toastr(
+            errorMessage
+              ? `${errorCode} - ${errorMessage}`
+              : "Something went wrong while fetching the notes!",
+            { type: "error", autoClose: 2000 }
+          );
         }
       );
     },
@@ -73,19 +82,54 @@ export const useStoreNotes = defineStore("storeNotes", {
       let currentDate = new Date().getTime(),
         date = currentDate.toString();
 
-      await addDoc(notesCollectionRef, {
+      addDoc(notesCollectionRef, {
         content: newNoteContent,
         date,
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        toastr(
+          errorMessage
+            ? `${errorCode} - ${errorMessage}`
+            : "Something went wrong while adding the note!",
+          { type: "error", autoClose: 2000 }
+        );
       });
     },
 
     async deleteNote(idToDelete) {
-      await deleteDoc(doc(notesCollectionRef, idToDelete));
+      deleteDoc(doc(notesCollectionRef, idToDelete))
+        .then(() => {
+          toastr("Successfully deleted the note!", {
+            type: "warning",
+            transition: "slide",
+            autoClose: 2000,
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toastr(
+            errorMessage
+              ? `${errorCode} - ${errorMessage}`
+              : "Something went wrong while deleting the note!",
+            { type: "error", autoClose: 2000 }
+          );
+        });
     },
 
     async updateNote(id, content) {
-      await updateDoc(doc(notesCollectionRef, id), {
+      updateDoc(doc(notesCollectionRef, id), {
         content,
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        toastr(
+          errorMessage
+            ? `${errorCode} - ${errorMessage}`
+            : "Something went wrong while updating the note!",
+          { type: "error", autoClose: 2000 }
+        );
       });
     },
 
@@ -102,7 +146,9 @@ export const useStoreNotes = defineStore("storeNotes", {
     getNoteContent: (state) => {
       return (id) => state.notes.filter((note) => note.id == id)[0].content;
     },
+
     totalNotesCount: (state) => state.notes.length,
+
     totalCharactersCount: (state) =>
       state.notes.reduce(
         (characterCounts, currentNote) =>

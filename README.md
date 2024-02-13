@@ -2,13 +2,14 @@
 
 ## Global Notes App
 
-### A presentable live notes app demonstrating implementation of Vue 3 concepts and firebase.
+### A presentable live notes app demonstrating implementation of Vue 3 concepts, firebase and other third-party libraries.
 
 ## Implementations :
 
 - Vue 3 - https://vuejs.org/
 - vue-router@4 - https://router.vuejs.org/
 - Bulma CSS - https://bulma.io/
+- Vue3 toastify - https://vue3-toastify.netlify.app/
 - Pinia - https://pinia.vuejs.org/
 - vueuse - https://vueuse.org/
 - Firebase - https://firebase.google.com/

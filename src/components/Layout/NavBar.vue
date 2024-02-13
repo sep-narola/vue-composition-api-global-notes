@@ -55,6 +55,19 @@
           >
             Stats
           </RouterLink>
+          <div class="navbar-item">
+            <button
+              class="button is-success is-ghost is-beta"
+              @click="storeTheme.toggleMode"
+            >
+              <span class="icon is-small">
+                <DycIcon
+                  :name="storeTheme.isDarkModeEnabled ? 'SunIcon' : 'MoonIcon'"
+                  type="outline"
+                />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -69,12 +82,14 @@
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { useStoreAuth } from "@/stores/storeAuth";
+import { useStoreTheme } from "@/stores/storeTheme";
 
 /*
     store
 */
 
 const storeAuth = useStoreAuth();
+const storeTheme = useStoreTheme();
 
 /*
     mobile nav
@@ -114,5 +129,15 @@ const logout = () => {
     left: 0;
     width: 100%;
   }
+}
+
+.is-beta:after {
+  content: "BETA";
+  font-size: 9px;
+  font-weight: 800;
+  vertical-align: top;
+  position: relative;
+  top: -7px;
+  left: 10px;
 }
 </style>
