@@ -29,4 +29,5 @@ coverage
 
 *.tsbuildinfo
 
-.firebase/*
+# Ignoring .firebase folder - contains local Firebase cache and settings that should not be shared
+.firebase/
